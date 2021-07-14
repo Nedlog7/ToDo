@@ -2,12 +2,13 @@
     <string name="app_name">ToDo</string>
     <string name="ShowCompletedTasks">Show completed tasks</string>
     <string name="SaveTask">Save task</string>
-    <string name="TaskRemind">Remind me</string>
-    <string name="TaskRemindMeAt">Remind me at %s</string>
     <string name="TaskAddDueDate">Add due date</string>
     <string name="TaskDueDate">Due %s</string>
     <string name="DeleteTask">Delete</string>
     <string name="ImportantTask">Important</string>
     <string name="CompleteTask">Complete</string>
     <string name="SaveTaskError">Enter a description of the task</string>
+    <string name="CompletedTasks">Completed - %d</string>
+    <string name="NotificationContent">Today you need to do %d tasks, do not forget</string>
+    <string name="TaskDescription">Task description…</string>
 </resources>

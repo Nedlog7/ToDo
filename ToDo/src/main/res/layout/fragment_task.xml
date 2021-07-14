@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TaskActivity">
+    tools:context=".ui.task.TaskFragment">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent">
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -37,7 +49,7 @@
                         android:id="@+id/etTask"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/app_name"
+                        android:hint="@string/TaskDescription"
                         android:gravity="top"
                         android:minLines="10" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -109,51 +121,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/ImportantTask"/>
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="56dp"
-                            android:background="?android:attr/listDivider" />
-
-                        <LinearLayout
-                            android:id="@+id/notificationLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/text_margin"
-                            android:orientation="horizontal"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackgroundBorderless">
-                            <ImageView
-                                android:id="@+id/ivNotification"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="@dimen/text_margin"
-                                app:srcCompat="@drawable/ic_notification"
-                                app:tint="@color/disable"/>
-
-                            <TextView
-                                android:id="@+id/tvNotification"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_gravity="center"
-                                android:text="@string/TaskRemind"/>
-
-                            <ImageView
-                                android:id="@+id/ivDeleteNotification"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="@dimen/text_margin"
-                                app:srcCompat="@drawable/ic_clear"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:background="?android:attr/selectableItemBackgroundBorderless"
-                                android:visibility="gone"/>
                         </LinearLayout>
 
                         <View

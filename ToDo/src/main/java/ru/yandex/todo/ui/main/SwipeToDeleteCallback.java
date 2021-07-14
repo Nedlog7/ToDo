@@ -1,4 +1,4 @@
-package ru.yandex.todo;
+package ru.yandex.todo.ui.main;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import ru.yandex.todo.R;
 
 abstract public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 

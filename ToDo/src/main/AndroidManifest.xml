@@ -2,11 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.yandex.todo">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -20,16 +17,11 @@
             android:resource="@xml/collapsing_animation_scene" />
         <activity
             android:name=".MainActivity"
-            android:configChanges="screenSize|orientation"
             android:theme="@style/Theme.ToDo.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".TaskActivity"
-            android:configChanges="screenSize|orientation"
-            android:theme="@style/Theme.ToDo.NoActionBar">
         </activity>
     </application>
 
