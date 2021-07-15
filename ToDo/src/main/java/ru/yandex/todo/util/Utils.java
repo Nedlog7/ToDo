@@ -6,12 +6,14 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 
 import java.text.DateFormat;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 public class Utils {
 
     public static String formatDate(long date) {
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        return df.format(date);
+        return df.format(Instant.ofEpochSecond(date).toEpochMilli());
     }
 
     public static Boolean isNetworkAvailable(Context context) {

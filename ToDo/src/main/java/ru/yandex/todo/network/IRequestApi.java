@@ -1,4 +1,4 @@
-package ru.yandex.todo.api;
+package ru.yandex.todo.network;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import ru.yandex.todo.model.SyncTask;
 import ru.yandex.todo.model.Task;
 
 /**
@@ -30,6 +31,6 @@ public interface IRequestApi {
     Observable<Task> deleteTask(@Path("id") long id);
 
     @PUT("tasks")
-    Observable<Task> syncTasks(@Body Task task);
+    Observable<List<Task>> syncTasks(@Body SyncTask task);
 
 }

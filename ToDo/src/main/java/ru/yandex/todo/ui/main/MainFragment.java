@@ -1,6 +1,11 @@
 package ru.yandex.todo.ui.main;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,14 +32,17 @@ import ru.yandex.todo.R;
 import ru.yandex.todo.adapter.TaskListAdapter;
 import ru.yandex.todo.model.Priority;
 import ru.yandex.todo.model.Task;
+import ru.yandex.todo.util.Utils;
 import ru.yandex.todo.viewmodel.TasksViewModel;
 
 public class MainFragment extends Fragment {
 
+    private FragmentActivity activity;
+
     private AppCompatCheckBox ivVisibility;
     private TaskListAdapter adapter;
     private TasksViewModel tasksViewModel;
-    private FragmentActivity activity;
+
     private Disposable subscribeTaskClick = null;
     private Disposable subscribeDoneClick = null;
     private Disposable subscribePriorityClick = null;

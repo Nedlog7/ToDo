@@ -1,4 +1,4 @@
-package ru.yandex.todo.api;
+package ru.yandex.todo.network;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

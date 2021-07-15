@@ -40,7 +40,7 @@ public class NotifyWorker extends Worker implements Constants {
                 .toLocalDate().atStartOfDay(ZoneId.systemDefault());
         ZonedDateTime endOfDay = startOfDay.plusDays(1);
 
-        TaskRepository taskRepository = new TaskRepository(getApplicationContext());
+        TaskRepository taskRepository = TaskRepository.getInstance(getApplicationContext());
         int taskCount = taskRepository.getTasksForToday(startOfDay.toEpochSecond(), endOfDay.toEpochSecond());
         if (taskCount > 0)
             triggerNotification(taskCount);

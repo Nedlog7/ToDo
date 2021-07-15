@@ -18,7 +18,6 @@ public class Task implements Parcelable, Cloneable {
     private long deadline = Long.MAX_VALUE;
     private long createdAt;
     private long updatedAt;
-    private boolean sync = false;
 
     public Task() {
     }
@@ -51,10 +50,6 @@ public class Task implements Parcelable, Cloneable {
         this.updatedAt = updatedAt;
     }
 
-    public void setSync(boolean sync) {
-        this.sync = sync;
-    }
-
     public long getId() {
         return id;
     }
@@ -83,10 +78,6 @@ public class Task implements Parcelable, Cloneable {
         return updatedAt;
     }
 
-    public boolean isSync() {
-        return sync;
-    }
-
     protected Task(Parcel in) {
         id = in.readLong();
         text = in.readString();
@@ -95,7 +86,6 @@ public class Task implements Parcelable, Cloneable {
         deadline = in.readLong();
         createdAt = in.readLong();
         updatedAt = in.readLong();
-        sync = in.readBoolean();
     }
 
     @Override
@@ -112,7 +102,6 @@ public class Task implements Parcelable, Cloneable {
         dest.writeLong(deadline);
         dest.writeLong(createdAt);
         dest.writeLong(updatedAt);
-        dest.writeBoolean(sync);
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {

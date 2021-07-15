@@ -11,16 +11,17 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.CompletableFuture;
 
-import ru.yandex.todo.db.dao.DeletedTaskDao;
+import ru.yandex.todo.db.dao.SyncTaskDao;
 import ru.yandex.todo.db.dao.TaskDao;
+import ru.yandex.todo.db.entity.SyncTaskEntity;
 import ru.yandex.todo.model.Task;
 
-@Database(entities = {Task.class}, version = 1, exportSchema = false)
+@Database(entities = {Task.class, SyncTaskEntity.class}, version = 1, exportSchema = false)
 @TypeConverters(Converter.class)
 abstract class TaskRoomDatabase extends RoomDatabase {
 
     abstract TaskDao taskDao();
-    abstract DeletedTaskDao deletedTaskDao();
+    abstract SyncTaskDao syncTaskDao();
 
     private static volatile TaskRoomDatabase INSTANCE;
 

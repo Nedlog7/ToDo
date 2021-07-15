@@ -7,8 +7,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import ru.yandex.todo.db.TaskRepository;
+import ru.yandex.todo.db.entity.SyncTaskEntity;
 import ru.yandex.todo.model.Task;
 
 public class TasksViewModel extends AndroidViewModel {
@@ -21,7 +23,7 @@ public class TasksViewModel extends AndroidViewModel {
     public TasksViewModel(Application application) {
         super(application);
 
-        taskRepository = new TaskRepository(application);
+        taskRepository = TaskRepository.getInstance(application);
 
         hideDone = taskRepository.getHideDone();
         tasks = taskRepository.getTasks();

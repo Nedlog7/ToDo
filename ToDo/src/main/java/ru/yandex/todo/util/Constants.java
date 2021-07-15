@@ -21,6 +21,7 @@ public interface Constants {
 
     int NOTIFICATION_ID = 1;
     String NOTIFICATION_WORK = "notification_work";
+    String SYNC_WORK = "sync_work";
 
     String token = "37972e567f5940bd84b0fe97d315eb7c";
 

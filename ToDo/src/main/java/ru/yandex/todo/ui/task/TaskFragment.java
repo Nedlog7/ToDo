@@ -1,5 +1,6 @@
 package ru.yandex.todo.ui.task;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -9,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -148,8 +150,8 @@ public class TaskFragment extends Fragment {
 
         dueDateLayout.setOnClickListener(v -> {
 
-            long date = task.getDeadline() == Long.MAX_VALUE ? MaterialDatePicker.todayInUtcMilliseconds() / 1000
-                    : task.getDeadline();
+            long date = task.getDeadline() == Long.MAX_VALUE ? MaterialDatePicker.todayInUtcMilliseconds()
+                    : Instant.ofEpochSecond(task.getDeadline()).toEpochMilli();
 
             MaterialDatePicker.Builder<Long> builder = setupDateSelectorBuilder(date);
             CalendarConstraints.Builder constraintsBuilder = setupConstraintsBuilder(date);
@@ -186,19 +188,21 @@ public class TaskFragment extends Fragment {
 
         if (item.getItemId() == R.id.task_menu) {
 
+            closeKeyboard();
+
             task.setText(String.valueOf(etTask.getText()));
 
             if (task.getText() != null && !task.getText().isEmpty()) {
 
                 long currentTime = Instant.now().getEpochSecond();
 
+                task.setUpdatedAt(currentTime);
                 if (task.getCreatedAt() == 0) {
                     task.setCreatedAt(currentTime);
                     task.setId(currentTime);
                     tasksViewModel.insert(task);
                 }
                 else {
-                    task.setUpdatedAt(currentTime);
                     tasksViewModel.update(task);
                 }
 
@@ -297,6 +301,21 @@ public class TaskFragment extends Fragment {
 
         imageView.getDrawable().setTint(color);
         imageViewClear.setVisibility(View.VISIBLE);
+
+    }
+
+    private void closeKeyboard() {
+
+        if (getContext() != null) {
+
+            InputMethodManager imm = (InputMethodManager) getContext().
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(etTask.getWindowToken(), 0);
+            } // if
+
+        } // if
 
     }
 
