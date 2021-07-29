@@ -25,9 +25,8 @@ public class TaskRepositoryModule {
 
     @Provides
     @Singleton
-    public static RequestApi provideRequestApi(IRequestApi requestApi, TaskDao taskDao,
-                                               SyncTaskDao syncTaskDao) {
-        return new RequestApi(requestApi, taskDao, syncTaskDao);
+    public static RequestApi provideRequestApi(IRequestApi requestApi) {
+        return new RequestApi(requestApi);
     }
 
     @Provides

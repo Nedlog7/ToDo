@@ -11,19 +11,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.observers.DefaultObserver;
+import io.reactivex.schedulers.Schedulers;
 import ru.yandex.todo.model.api.RequestApi;
 import ru.yandex.todo.model.db.dao.SyncTaskDao;
 import ru.yandex.todo.model.db.dao.TaskDao;
 import ru.yandex.todo.model.db.entity.SyncTaskEntity;
 import ru.yandex.todo.model.models.SyncTask;
 import ru.yandex.todo.model.models.Task;
+import ru.yandex.todo.utils.Constants;
 import ru.yandex.todo.utils.Utils;
 
 public class TaskRepository {
@@ -80,7 +84,32 @@ public class TaskRepository {
             taskDao.insert(task);
             syncTaskDao.insert(new SyncTaskEntity(task.getId(), false));
         });
-        requestApi.insertTask(task);
+
+        requestApi.insertTask(task).observeOn(Schedulers.io())
+                .subscribe(new DefaultObserver<Task>() {
+                    @Override
+                    public void onNext(@NotNull Task t) {
+                        Log.d(Constants.TAG, "onNext");
+
+                        if (task.getUpdatedAt() == t.getUpdatedAt()) {
+                            syncTaskDao.delete(t.getId());
+                        }
+                        else if (task.getUpdatedAt() < t.getUpdatedAt()) {
+                            syncTaskDao.delete(t.getId());
+                            taskDao.update(t);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NotNull Throwable e) {
+                        Log.e(Constants.TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(Constants.TAG, "onComplete");
+                    }
+                });
     }
 
     public void update(Task task) {
@@ -88,7 +117,32 @@ public class TaskRepository {
             taskDao.update(task);
             syncTaskDao.insert(new SyncTaskEntity(task.getId(), false));
         });
-        requestApi.updateTask(task);
+
+        requestApi.updateTask(task).observeOn(Schedulers.io())
+                .subscribe(new DefaultObserver<Task>() {
+                    @Override
+                    public void onNext(@NotNull Task t) {
+                        Log.d(Constants.TAG, "onNext");
+
+                        if (task.getUpdatedAt() == t.getUpdatedAt()) {
+                            syncTaskDao.delete(t.getId());
+                        }
+                        else if (task.getUpdatedAt() < t.getUpdatedAt()) {
+                            syncTaskDao.delete(t.getId());
+                            taskDao.update(t);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NotNull Throwable e) {
+                        Log.e(Constants.TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(Constants.TAG, "onComplete");
+                    }
+                });
     }
 
     public void delete(Task task) {
@@ -96,7 +150,25 @@ public class TaskRepository {
             taskDao.delete(task);
             syncTaskDao.insert(new SyncTaskEntity(task.getId(), true));
         });
-        requestApi.deleteTask(task);
+
+        requestApi.deleteTask(task).observeOn(Schedulers.io())
+                .subscribe(new DefaultObserver<Task>() {
+                    @Override
+                    public void onNext(@NotNull Task t) {
+                        Log.d(Constants.TAG, "onNext");
+                        syncTaskDao.delete(t.getId());
+                    }
+
+                    @Override
+                    public void onError(@NotNull Throwable e) {
+                        Log.e(Constants.TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(Constants.TAG, "onComplete");
+                    }
+                });
     }
 
     private List<Long> getTasksId(boolean getDeletedTask) {
@@ -116,10 +188,47 @@ public class TaskRepository {
             SyncTask syncTask = new SyncTask();
             syncTask.setDeletedTasksId(id);
             syncTask.setOtherTasks(list);
-            requestApi.syncTasks(syncTask);
+
+            requestApi.syncTasks(syncTask).observeOn(Schedulers.io())
+                    .subscribe(new DefaultObserver<List<Task>>() {
+                        @Override
+                        public void onNext(@NotNull List<Task> tasks) {
+                            Log.d(Constants.TAG, "onNext");
+                            syncTaskDao.deleteAll();
+                            taskDao.deleteAndInsert(tasks);
+                        }
+
+                        @Override
+                        public void onError(@NotNull Throwable e) {
+                            Log.e(Constants.TAG, "onError: " + e.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.d(Constants.TAG, "onComplete");
+                        }
+                    });
         }
         else
-            requestApi.getTasks();
+            requestApi.getTasks().observeOn(Schedulers.io())
+                    .subscribe(new DefaultObserver<List<Task>>() {
+                        @Override
+                        public void onNext(@NotNull List<Task> tasks) {
+                            Log.d(Constants.TAG, "onNext");
+                            syncTaskDao.deleteAll();
+                            taskDao.deleteAndInsert(tasks);
+                        }
+
+                        @Override
+                        public void onError(@NotNull Throwable e) {
+                            Log.e(Constants.TAG, "onError: " + e.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.d(Constants.TAG, "onComplete");
+                        }
+                    });
 
     }
 

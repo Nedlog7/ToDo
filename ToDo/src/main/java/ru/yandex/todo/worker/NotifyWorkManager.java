@@ -31,7 +31,7 @@ public class NotifyWorkManager {
 
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest
                     .Builder(NotifyWorker.class)
-                    //.setInitialDelay(5, TimeUnit.MINUTES)
+                    .setInitialDelay(5, TimeUnit.MINUTES)
                     .addTag(Constants.NOTIFICATION_WORK)
                     .build();
 
