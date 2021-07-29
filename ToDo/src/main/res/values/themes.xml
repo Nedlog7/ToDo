@@ -2,14 +2,14 @@
     <!-- Base application theme. -->
     <style name="Theme.ToDo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#007AFF</item>
-        <item name="colorPrimaryVariant">@color/purple_200</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="colorOnSecondary">@color/black</item>
-        <item name="android:colorBackground">#F7F6F2</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
         <!-- Customize your theme here. -->
         <item name="floatingActionButtonStyle">@style/Widget.ToDo.FloatingActionButton</item>
         <item name="toolbarStyle">@style/Widget.ToDo.Toolbar</item>

@@ -6,7 +6,7 @@
     app:startDestination="@id/mainFragment">
     <fragment
         android:id="@+id/mainFragment"
-        android:name="ru.yandex.todo.ui.main.MainFragment"
+        android:name="ru.yandex.todo.view.activity.mainActivity.fragment.MainFragment"
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_taskFragment"
@@ -19,11 +19,11 @@
 
     <fragment
         android:id="@+id/taskFragment"
-        android:name="ru.yandex.todo.ui.task.TaskFragment"
+        android:name="ru.yandex.todo.view.activity.mainActivity.fragment.TaskFragment"
         android:label="Task"
         tools:layout="@layout/fragment_task">
         <argument
             android:name="task"
-            app:argType="ru.yandex.todo.model.Task" />
+            app:argType="ru.yandex.todo.model.models.Task" />
     </fragment>
 </navigation>

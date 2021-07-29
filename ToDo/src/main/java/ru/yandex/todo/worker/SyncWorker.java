@@ -3,27 +3,33 @@ package ru.yandex.todo.worker;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.hilt.work.HiltWorker;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import org.jetbrains.annotations.NotNull;
 
-import ru.yandex.todo.db.TaskRepository;
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
+import ru.yandex.todo.model.repository.TaskRepository;
 
+@HiltWorker
 public class SyncWorker extends Worker {
 
-    public SyncWorker(@NonNull @NotNull Context context, @NonNull @NotNull WorkerParameters workerParams) {
+    private final TaskRepository taskRepository;
+
+    @AssistedInject
+    public SyncWorker(@NonNull @Assisted Context context, @NonNull @Assisted WorkerParameters workerParams,
+                      TaskRepository taskRepository) {
         super(context, workerParams);
+        this.taskRepository = taskRepository;
     }
 
     @NonNull
     @NotNull
     @Override
     public Result doWork() {
-
-        TaskRepository taskRepository = TaskRepository.getInstance(getApplicationContext());
         taskRepository.syncTasks();
-
         return Result.success();
     }
 
