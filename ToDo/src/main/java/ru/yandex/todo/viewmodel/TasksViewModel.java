@@ -1,33 +1,33 @@
 package ru.yandex.todo.viewmodel;
 
-import android.app.Application;
-
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-import ru.yandex.todo.db.TaskRepository;
-import ru.yandex.todo.db.entity.SyncTaskEntity;
-import ru.yandex.todo.model.Task;
+import javax.inject.Inject;
 
-public class TasksViewModel extends AndroidViewModel {
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import ru.yandex.todo.model.models.Priority;
+import ru.yandex.todo.model.models.Task;
+import ru.yandex.todo.model.repository.TaskRepository;
 
-    private final TaskRepository taskRepository;
+@HiltViewModel
+public class TasksViewModel extends ViewModel {
+
+    TaskRepository taskRepository;
+
     private LiveData<List<Task>> tasks;
     private MutableLiveData<Boolean> hideDone;
     private LiveData<List<Task>> completedTasks;
 
-    public TasksViewModel(Application application) {
-        super(application);
-
-        taskRepository = TaskRepository.getInstance(application);
-
+    @Inject
+    public TasksViewModel(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
         hideDone = taskRepository.getHideDone();
         tasks = taskRepository.getTasks();
-
         completedTasks = taskRepository.getCompletedTasks();
     }
 
@@ -39,20 +39,36 @@ public class TasksViewModel extends AndroidViewModel {
         return completedTasks;
     }
 
-    public MutableLiveData<Boolean> getHideDone() {
-        return hideDone;
+    public void onSaveTaskClick(Task task, boolean isNewTask) {
+        if (isNewTask)
+            taskRepository.insert(task);
+        else
+            taskRepository.update(task);
     }
 
-    public void insert(Task task) {
-        taskRepository.insert(task);
-    }
-
-    public void update(Task task) {
-        taskRepository.update(task);
-    }
-
-    public void delete(Task task) {
+    public void onDeleteTaskClick(Task task) {
         taskRepository.delete(task);
+    }
+
+    public void onHideDoneClick(boolean hideDone) {
+        this.hideDone.postValue(hideDone);
+    }
+
+    public void onDoneClick(Task task) {
+        Task clone = (Task) task.clone();
+        clone.setDone(!clone.isDone());
+        clone.setUpdatedAt(Instant.now().getEpochSecond());
+
+        taskRepository.update(clone);
+    }
+
+    public void onPriorityClick(Task task) {
+        Task clone = (Task) task.clone();
+        clone.setPriority(clone.getPriority() == Priority.IMPORTANT
+                ? Priority.LOW : Priority.IMPORTANT);
+        clone.setUpdatedAt(Instant.now().getEpochSecond());
+
+        taskRepository.update(clone);
     }
 
 }

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
+import androidx.hilt.work.HiltWorker;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
@@ -19,28 +20,34 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 
-import ru.yandex.todo.MainActivity;
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
 import ru.yandex.todo.R;
-import ru.yandex.todo.db.TaskRepository;
-import ru.yandex.todo.util.Constants;
+import ru.yandex.todo.model.repository.TaskRepository;
+import ru.yandex.todo.utils.Constants;
+import ru.yandex.todo.view.activity.mainActivity.MainActivity;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
+@HiltWorker
+public class NotifyWorker extends Worker {
 
-public class NotifyWorker extends Worker implements Constants {
+    private final TaskRepository taskRepository;
 
-    public NotifyWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+    @AssistedInject
+    public NotifyWorker(@NonNull @Assisted Context context, @NonNull @Assisted WorkerParameters params,
+                        TaskRepository taskRepository) {
         super(context, params);
+        this.taskRepository = taskRepository;
     }
 
     @NonNull
     @Override
     public Result doWork() {
+
         Instant instant = Instant.now();
         ZonedDateTime startOfDay = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault())
                 .toLocalDate().atStartOfDay(ZoneId.systemDefault());
         ZonedDateTime endOfDay = startOfDay.plusDays(1);
 
-        TaskRepository taskRepository = TaskRepository.getInstance(getApplicationContext());
         int taskCount = taskRepository.getTasksForToday(startOfDay.toEpochSecond(), endOfDay.toEpochSecond());
         if (taskCount > 0)
             triggerNotification(taskCount);
@@ -49,8 +56,8 @@ public class NotifyWorker extends Worker implements Constants {
 
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest
                 .Builder(NotifyWorker.class)
-                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                .addTag(NOTIFICATION_WORK)
+                .setInitialDelay(delay, TimeUnit.SECONDS)
+                .addTag(Constants.NOTIFICATION_WORK)
                 .build();
 
         WorkManager.getInstance(getApplicationContext()).enqueue(notificationWork);
@@ -78,7 +85,7 @@ public class NotifyWorker extends Worker implements Constants {
         chan.setShowBadge(false);
 
         NotificationManager notificationManager = (NotificationManager)
-                context.getSystemService(NOTIFICATION_SERVICE);
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(chan);
 
         String contentText = String.format(context.getString(R.string.NotificationContent), taskCount);
@@ -93,7 +100,7 @@ public class NotifyWorker extends Worker implements Constants {
                 .setStyle(new Notification.BigTextStyle().bigText(contentText))
                 .setAutoCancel(true);
 
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+        notificationManager.notify(Constants.NOTIFICATION_ID, notificationBuilder.build());
 
     }
 
